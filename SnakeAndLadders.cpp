@@ -28,17 +28,11 @@ public:
 class SnakeAndLadders {
 private:
 	int board[101];
+	int rank=1;
 	unordered_map<int,int> snakes;
 	unordered_map<int,int> ladders;
 	vector<Player> players;
-	void print(Player &p,int num,int oldPos,int newPos) {
-		cout<<p.getName()<<" rolled a "<<num;
-		cout<<" and moved from "<<oldPos<<" to "<<newPos;
-		cout<<endl;
-	}
-	void victory(Player &p) {
-		cout<<p.getName()<<" wins the game";
-	}
+	vector<Player> ranks;
 	void upLadder(Player &p,int oldPos,int newPos) {
 		cout<<p.getName()<<" finds a ladder";
 		cout<<" and moved from "<<oldPos<<" to "<<newPos;
@@ -48,6 +42,20 @@ private:
 		cout<<p.getName()<<" finds a snake";
 		cout<<" and moved from "<<oldPos<<" to "<<newPos;
 		cout<<endl;
+	}
+	void print(Player &p,int num,int oldPos,int newPos) {
+		cout<<p.getName()<<" rolled a "<<num;
+		cout<<" and moved from "<<oldPos<<" to "<<newPos;
+		cout<<endl;
+	}
+	void victory(Player &p) {
+		cout<<p.getName()<<" wins the game , ";
+		cout<<"Rank : "<<rank<<endl;
+	}
+	void result() {
+		for (int i=0;i<ranks.size();i++) {
+			cout<<"Rank "<<i+1<<" : "<<ranks[i].getName()<<endl;
+		}
 	}
 	bool isLadder(Player &p,int pos) {
 		if (ladders.find(pos)==ladders.end()) {
@@ -91,7 +99,13 @@ public:
 				newPos=players[i].getPos();
 				if (newPos==100) {
 					victory(players[i]);
-					return;
+					ranks.push_back(players[i]);
+					players.erase(players.begin()+i);
+					rank++;
+					if (players.size()==1) {
+						result();
+						return;
+					}
 				}
 			}
 		}
